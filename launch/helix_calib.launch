@@ -1,0 +1,10 @@
+<launch>
+
+<!-- ROS drivers for april tags and camera startup -->
+  <include file="$(find realsenseCamera_aprilTags)/launch/realsense_apriltags.launch"/>
+
+  <!-- calibration file -->
+  <node name="camera_calibration" type="camera_calibration" pkg="helix_exp" output="screen" cwd="node" />
+ 
+  
+</launch>
