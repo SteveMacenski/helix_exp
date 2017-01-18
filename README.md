@@ -47,12 +47,12 @@ TODO collection
         
 TODO analysis
         - Clustering
-        - 1'' from end of second side
         - adjust ROI to find rod on camera placement better (bttom)
         
         
 DONE
         - speed control not 10 seconds
+        - 1'' from end of second side
         
 
 In experimental_data_and_errors directory:
