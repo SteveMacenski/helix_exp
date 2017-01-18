@@ -1,4 +1,47 @@
 
+
+
+
+# Collection Pipeline:
+
+> roslaunch helix_exp helix_calib.launch
+
+
+This will run calibration with tag on robot EE. Input joint angles when asked and it will generate calibration file in current directory. Place into the experimental_data_and_errors directory. Uses april tags.
+
+> roslaunch helix_exp helix_exp.launch
+
+
+Will run the paths in the "robot_paths.txt" file in experimental_data_and_errors. 
+
+After, take the result_images, errors.txt, robot_paths.txt, and calibration file and zip them onto the external drive. in errors 3=good
+
+
+
+# Pose Process Pipeline:
+
+copy the result_images folder to home directory
+place Makefile, im_seg.cpp, and post_process.sh in folder
+
+> make 
+
+
+Make the im_seg file to 'segm'
+
+> ./post_process.sh
+
+
+runs the post_process for all .bmp files in directory, stores the ROIandPnts images for troubleshooting, then rodPoints.txt file for the points. 
+
+Zip folder and place this and the raw data into a descriptive folder name on the external drive
+
+
+
+# Andy's work
+
+He'll read in the points after a quick quality control check in matlab and run scripts.
+
+
 TODO collection
         - get home pose angles 
         
@@ -17,39 +60,6 @@ In experimental_data_and_errors directory:
         - result_images from collection
         - robot_paths.txt
         - SHOULD have calibration file, cd before running
-
-
-
-# Collection Pipeline:
-
-> roslaunch helix_exp helix_calib.launch
-This will run calibration with tag on robot EE. Input joint angles when asked and it will generate calibration file in current directory. Place into the experimental_data_and_errors directory
-
-> roslaunch helix_exp helix_exp.launch
-Will run the paths in the "robot_paths.txt" file in experimental_data_and_errors. 
-
-After, take the result_images, errors.txt, robot_paths.txt, and calibration file and zip them onto the external drive. in errors 3=good
-
-
-
-# Pose Process Pipeline:
-
-copy the result_images folder to home directory
-place Makefile, im_seg.cpp, and post_process.sh in folder
-
-> make 
-Make the im_seg file to 'segm'
-
-> ./post_process.sh
-runs the post_process for all .bmp files in directory, stores the ROIandPnts images for troubleshooting, then rodPoints.txt file for the points. 
-
-Zip folder and place this and the raw data into a descriptive folder name on the external drive
-
-
-
-# Andy's work
-
-He'll read in the points after a quick quality control check in matlab and run scripts.
 
 
 
