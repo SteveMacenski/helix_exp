@@ -167,19 +167,6 @@ void poseCallback(const geometry_msgs::PoseArray& pose){
     cam_pose[1] = y_cam;
     cam_pose[2] = z_cam;
     
-    /*std::cout << "X from cam to tag is: ";
-    std::cout << x_cam << std::endl;
-    
-    std::cout << "y from cam to tag is: ";
-    std::cout << y_cam << std::endl;
-    
-    std::cout << "z from cam to tag is: ";
-    std::cout << z_cam << std::endl;
-    
-    std::cout << "quaternion cam to tag is: " << std::endl;
-    std::cout << pose.poses[0].orientation << std::endl;
-    */
-    
     std::vector< std::vector< double> > cam2tagT(4, std::vector<double>(4));
     cam2tagT = quatPose2Tform(pose.poses[0].orientation, cam_pose);
     
@@ -205,6 +192,7 @@ void poseCallback(const geometry_msgs::PoseArray& pose){
     */
     
     //write file
+    std::cout << "writing file" << std::endl;
   std::ofstream myfile;
   
   time_t now = time(0);
@@ -213,45 +201,6 @@ void poseCallback(const geometry_msgs::PoseArray& pose){
   myfile.open (dt);
   myfile << dt;
   myfile << "\n\n";
-  
-  //TODO account for EE 
-  /*
-  myfile << "camera to robot T transform\n";
-  for (int i=0;i<4;i++)
-  {
-    for (int j=0;j<4;j++)
-    {
-      myfile << cam2robT[i][j];
-      myfile << ", ";
-      }
-    myfile << "\n";
-  }
-  myfile << "\n";
-    
-  myfile << "camera to tag T transform\n";
-  for (int i=0;i<4;i++)
-  {
-    for (int j=0;j<4;j++)
-    {
-      myfile << cam2tagT[i][j];
-      myfile << ", ";
-      }
-    myfile << "\n";
-  }
-  myfile << "\n";
-      
-  myfile << "robot to tag T transform\n";
-  for (int i=0;i<4;i++)
-  {
-    for (int j=0;j<4;j++)
-    {
-      myfile << rob2tagT[i][j];
-      myfile << ", ";
-      }
-    myfile << "\n";
-  }  
-  myfile << "\n\n";
-  */
   
   
   myfile << "camera params: \n";
