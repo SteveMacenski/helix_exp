@@ -1,0 +1,31 @@
+Fri Jan 27 14:12:51 2017
+
+
+camera params: 
+fx: 
+1412.13
+fy: 
+1415.08
+cx: 
+1007.95
+cy: 
+553.081
+
+raw data: 
+rob pose 
+J1: 0
+J2: 14.32
+J3: -14.32
+J4: -93.26
+J5: -85.88
+J6: 188.29
+
+cam pose/quat: 
+x pose:-0.261012
+y pose:0.126147
+z pose:1.40441
+quaternion qx,qy,qz,qw:
+0.998731
+-0.0253139
+0.0424467
+-0.00972793
