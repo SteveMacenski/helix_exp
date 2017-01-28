@@ -33,6 +33,11 @@ place Makefile, im_seg.cpp, and post_process.sh in folder
 
 > make 
 
+Then run this shell command:
+
+> for file in *' '*; do [ -f "$file" ] && mv "$file" "`echo $file|tr -d '[:space:]'`"; done
+
+To remove spaces in filenames. 
 
 Make the im_seg file to 'segm'
 
@@ -51,7 +56,6 @@ He'll read in the points after a quick quality control check in matlab and run s
 
         
 TODO analysis
-        - adjust ROI to find rod on camera placement better (bttom)
         - clutering validation
         
 
