@@ -59,11 +59,4 @@ TODO analysis
         - clutering validation
         
 
-In experimental_data_and_errors directory:
-        - errors.txt
-        - result_images from collection
-        - robot_paths.txt
-        - SHOULD have calibration file, cd before running
-
-
 
