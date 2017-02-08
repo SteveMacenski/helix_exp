@@ -196,7 +196,7 @@ def parse_file(filename):
             commands = []
             continue
         individ_positions = [float(element) for element in 
-                             line.split(',') if element != '\n']
+                             line.split(' ') if element != '\n']
         commands.append(individ_positions)
         
     f.close()
