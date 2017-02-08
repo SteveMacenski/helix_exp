@@ -6,6 +6,8 @@
 
 Get cameras placed well and put tag on EE R1 (Rosey). 110 cm from ground on tape.
 
+> roslaunch realsenseCamera_aprilTags realsense_apriltags.launch 
+
 > rosrun image_view image_view image:=/usb_cam/image_raw
 
 Then,
@@ -37,7 +39,7 @@ Then run this shell command:
 
 > for file in *' '*; do [ -f "$file" ] && mv "$file" "`echo $file|tr -d '[:space:]'`"; done
 
-To remove spaces in filenames. 
+To remove spaces in filenames. Make a file "rodPoints.txt". 
 
 Make the im_seg file to 'segm'
 
