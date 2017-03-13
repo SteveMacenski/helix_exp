@@ -13,6 +13,7 @@ import time
             #rosey then gary angles
 home_pose = [0.,0.25,-0.25,0.,-1.58,2.97, 
              0.,0.25,-0.25,0.,-1.58,2.97]
+#home_pose = [0,0,0,0,0,0,0,0,0,0,0,0]
 
 #ROS publishers and subscribers
 rospy.init_node('hardware_handler', anonymous=True)
