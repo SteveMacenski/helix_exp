@@ -27,6 +27,26 @@ Will run the paths in the "robot_paths.txt" file in experimental_data_and_errors
 After, take the result_images, errors.txt, robot_paths.txt, and calibration file and zip them onto the external drive. in errors 3=good
 
 
+# Collection Pipeline NEW:
+
+Get cameras placed well and put tag on EE R1 (Rosey). 110 cm from ground on tape.
+
+> roslaunch realsenseCamera_aprilTags realsense_apriltags.launch 
+
+> rosrun image_view image_view image:=/usb_cam/image_raw
+
+Then,
+
+> roslaunch helix_exp helix_calib_multi.launch
+
+Them, remove calibration piece. 
+
+> roslaunch helix_exp helix_exp.launch
+
+Will run the paths in the "robot_paths.txt" file in experimental_data_and_errors. Once in home pose waiting to start, connect the rod.
+
+After, take the result_images, errors.txt, robot_paths.txt, and calibration file and zip them onto the external drive. in errors 3=good
+
 
 # Pose Process Pipeline:
 
