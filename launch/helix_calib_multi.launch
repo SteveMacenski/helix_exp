@@ -1,0 +1,13 @@
+<launch>
+
+<!-- ROS drivers for ABB IRB 120 multi-group single-controller -->
+  <include file="$(find ABB_MultiBot)/launch/abb_multi_robot_single_controller.launch"/>
+
+<!-- ROS drivers for april tags and camera startup -->
+  <include file="$(find realsenseCamera_aprilTags)/launch/realsense_apriltags.launch"/>
+
+  <!-- calibration file -->
+  <node name="camera_calibration_multi" type="camera_calibration_multi" pkg="helix_exp" output="screen" cwd="node" />
+ 
+  
+</launch>
