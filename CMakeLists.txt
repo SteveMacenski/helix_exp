@@ -135,6 +135,7 @@ include_directories(
 ## Declare a C++ executable
 add_executable(camera_capture src/camera_capture.cpp)
 add_executable(camera_calibration src/camera_calibration.cpp)
+add_executable(camera_calibration_multi src/camera_calibration_multi.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -146,6 +147,10 @@ add_executable(camera_calibration src/camera_calibration.cpp)
  )
 
  target_link_libraries(camera_calibration
+   ${catkin_LIBRARIES}
+ )
+ 
+ target_link_libraries(camera_calibration_multi
    ${catkin_LIBRARIES}
  )
 #############
