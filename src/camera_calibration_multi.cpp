@@ -11,30 +11,33 @@
 #include <unistd.h>
 #include "std_msgs/String.h"
 #include "sensor_msgs/Image.h"
-#include <unistd.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h> 
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <sstream> 
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
 
-//TODO's 
-//(1) mod this for the path_handler via
+//mod this for the path_handler via
   // 1.1 parse file
-  // 1.2 take images
-  // 1.3 naming 
-  // 1.4 speed
+  // 1.2 calib_images -> real_images
 
 std::vector<double> J1,J2,J3,J4,J5,J6;// vectors to save robo
 std::vector<std::vector< double> > cam_poses;// vector to save cam
 std::vector<geometry_msgs::PoseArray> cam_orient;// vector to save cam
 std::vector<double> Jcurrent(6);
+std::vector<std::pair<double,double> > cam_AT_points; // vector to save corner pts
 std::vector<std::vector<double> > trajectory; //traj to follow
 
 bool go_tags = false; //moved robot telling tags to work
 bool go_robo = false; //saying "im done with moving"
 bool tries = true;
+bool go_ATraw = false;
+bool go_picture = false;
+int iterat = 0;
 
 std::vector<double> x_t, y_t, z_t;
 int traj_count = 1;
@@ -65,7 +68,9 @@ void writeToFile(){
   myfile << "\n\nraw data: \n";
   myfile << "rob pose J1:6\n";
   myfile << "---";
-  myfile << "\ncam pose/quat: pose (x,y,z), quaternion qx,qy,qz,qw: \n\n";
+  myfile << "\ncam pose/quat: pose (x,y,z), quaternion qx,qy,qz,qw: \n";
+  myfile << "---";
+  myfile << "\nray april tags points: p1, p2, p3, p4, cxy: \n\n";
   
   for (int i=0;i!=J1.size();i++){
     myfile << J1[i] << " " << J2[i] << " " << J3[i] << " ";
@@ -85,6 +90,18 @@ void writeToFile(){
     myfile << cam_orient[i].poses[0].orientation.z << ", ";
     myfile << cam_orient[i].poses[0].orientation.w << ", ";
     myfile << "\n";
+  }
+  myfile << "\n";
+
+  int myCount = 1;
+  for (int i=0;i!=cam_AT_points.size();i++){
+    myfile << cam_AT_points[i].first << " " << cam_AT_points[i].second << " "; 
+    
+    myCount++;
+    if (myCount == 6){
+      myfile << "\n";
+      myCount = 1;
+    }
   }
   
   myfile.close();
@@ -339,7 +356,9 @@ void gen_calib_traj(){
    
    for (int i=0;i!=trajectory.size();i++){
      for(int j=0;j!=7;j++){
+       trajectory[i][j] += 0; // for artificially creating more pts 
        trajectory[i][j] *= 3.14159/180.;
+       
      }
    }
    
@@ -405,7 +424,7 @@ void moveRobotCaller(){
       msg.goal.trajectory.points[0].time_from_start = \
                                      ros::Duration(0.);
       msg.goal.trajectory.points[1].time_from_start = \
-                                     ros::Duration(1.5);
+                                     ros::Duration(1.9);
                                      
       // send
       std::cout << "sending!" << std::endl;
@@ -464,7 +483,7 @@ void poseCallback(const geometry_msgs::PoseArray& pose){
     y_t.push_back(pose.poses[0].position.y);
     z_t.push_back(pose.poses[0].position.z);
     std::cout << "got: " << x_t.size() << std::endl;
-    if (x_t.size() >= 5){
+    if (x_t.size() >= 3){
 
       for(int i=1;i<x_t.size();i++){
         x_c += x_t[i];
@@ -493,9 +512,14 @@ void poseCallback(const geometry_msgs::PoseArray& pose){
       
       go_tags = false;
       go_robo = false;
+      go_ATraw = true;
       x_t.clear(); y_t.clear(); z_t.clear();
       moveRobotCaller();
+    } else if (x_t.size() == 2){
+      go_ATraw = true;
+      go_picture = true;
     }  
+    
   } 
 }
 
@@ -521,6 +545,41 @@ void statusCallback(const \
   }
 }
 
+
+void ATCallback(const geometry_msgs::PoseArray& ATpoints){
+  // take data on the detected April tags raw, not the pose estimation
+  // info is ordered: p1, p2, p3, p4, cxy
+  
+  if (go_ATraw == true){
+    for (int i=0;i!=5;i++){
+      cam_AT_points.push_back( \
+                    std::make_pair( \
+                    ATpoints.poses[i].position.x, \
+                    ATpoints.poses[i].position.y)); 
+    }
+    go_ATraw = false;
+  }
+}
+
+
+void imageCallback(const sensor_msgs::Image& image){
+
+  if (go_picture == true){
+
+    cv_bridge::CvImagePtr cv_ptr; 
+    cv_ptr = cv_bridge::toCvCopy(image, "bgr8");
+
+    std::stringstream sstream;
+  
+   sstream << "./../../../../catkin_ws/src/helix_exp/experimental_data_and_errors/calib_images/" << iterat << ".bmp" ;
+   ROS_ASSERT( cv::imwrite( sstream.str(),  cv_ptr->image ) );
+  
+    go_picture = false;
+    iterat += 1;
+  }
+}
+
+
 int main(int argc, char **argv){  
 
   // initialize ROS
@@ -533,6 +592,10 @@ int main(int argc, char **argv){
   ros::Subscriber substatus = \
      m.subscribe("/rosey/joint_trajectory_action/result", 100, \
       statusCallback);
+  ros::Subscriber subAT = \
+     m.subscribe("AprilTagPointsRaw", 100, \
+      ATCallback);
+  ros::Subscriber subimage = m.subscribe("/usb_cam/image_raw", 50, &imageCallback);
   pub = m.advertise \
      <control_msgs::FollowJointTrajectoryActionGoal> \
      ("/rosey/joint_trajectory_action/goal", 10);
