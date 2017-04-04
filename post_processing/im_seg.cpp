@@ -69,6 +69,7 @@ void Find_Rod( Mat& src, char* window_name2, char* file_name )
   int smoothing = 20;
   int starting, ending;
   Mat source;
+  Mat source_rod = src.clone();
   source = src.clone();
   bool first = false;
   int hor_starting, hor_ending;
@@ -225,7 +226,6 @@ void Find_Rod( Mat& src, char* window_name2, char* file_name )
   int sub_ROI = 50;
   int x = vert_src.rows/sub_ROI;
 
-  //TODO start issues 7
   for (int row=1; row < vert_src.rows/x-1; row++){
     //sets ROI and slices to it
     Rect ROIsize(0, row*x, vert_src.cols, 4);
@@ -443,9 +443,7 @@ void Find_Rod( Mat& src, char* window_name2, char* file_name )
   fileName.append("ROIandPnts");
   fileName.append(".jpg");
   imwrite(fileName, flip_270(source), (std::vector<int>){CV_IMWRITE_JPEG_QUALITY,0});
-  
-  //write to file 1 pnt/line, 1 space between rod shapes, w/ date
-  
+  /*
   time_t now = time(0);
   char* dt = ctime(&now);
   
@@ -461,9 +459,23 @@ void Find_Rod( Mat& src, char* window_name2, char* file_name )
   }
   
   myfile.close();
+  */
 
                 // show the rod with ROI and points 
                 //imshow( window_name2, vert_src );
+  
+  // export image with just rod pixels                          
+  Mat ROD(source_rod.rows, source_rod.cols, CV_32F);
+  Mat ROD_Isolated;
+  ROD.setTo(255);        
+  Rect RODSpace(hor_starting, starting, hor_ending-hor_starting, height);
+  ROD_Isolated = source_rod(RODSpace);
+  ROD_Isolated.copyTo(ROD.colRange(hor_starting, hor_ending).rowRange(starting, starting+height));
+  
+  std::string fileNameOutput = Tpoint;
+  fileNameOutput.append("Isolated");
+  fileNameOutput.append(".bmp");
+  imwrite(fileNameOutput, flip_270(ROD));
 }
 
 

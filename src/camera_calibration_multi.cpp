@@ -349,7 +349,7 @@ void gen_calib_traj(){
    }
 
    for(int i=0;i!=trajectory.size();i++){
-     trajectory[i][3] = 90.;
+     trajectory[i][3] = 90.; // -90 for gary
      trajectory[i][4] = 90.;
      trajectory[i][5] = 0.;
    }
@@ -366,7 +366,7 @@ void gen_calib_traj(){
   trajectory[0][0] = 0.;
   trajectory[0][1] = 0.;
   trajectory[0][2] = 0.;
-  trajectory[0][3] = 1.57;
+  trajectory[0][3] = 1.57; // -90 for gary
   trajectory[0][4] = 1.57;
   trajectory[0][5] = 0.;
   
@@ -427,7 +427,7 @@ void moveRobotCaller(){
                                      ros::Duration(1.9);
                                      
       // send
-      std::cout << "sending!" << std::endl;
+      std::cout << "sending! " << traj_count << std::endl;
       pub.publish(msg);
     
       // index up

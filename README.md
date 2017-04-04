@@ -12,7 +12,7 @@ Get cameras placed well and put tag on EE R1 (Rosey). 110 cm from ground on tape
 
 Then,
 
-> roslaunch helix_exp helix_calib.launch
+> roslaunch helix_exp helix_calib_multi.launch
 
 
 This will run calibration with tag on robot EE. Input joint angles when asked and it will generate calibration file. Place into the experimental_data_and_errors directory, will appear in /devel/lib/helix_exp directory. Uses april tags.
