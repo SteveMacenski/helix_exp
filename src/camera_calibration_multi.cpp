@@ -366,7 +366,7 @@ void gen_calib_traj(){
   trajectory[0][0] = 0.;
   trajectory[0][1] = 0.;
   trajectory[0][2] = 0.;
-  trajectory[0][3] = 1.57; // -90 for gary
+  trajectory[0][3] = 1.57; // -1.57 for gary
   trajectory[0][4] = 1.57;
   trajectory[0][5] = 0.;
   
@@ -377,7 +377,7 @@ void gen_calib_traj(){
 void moveRobotCaller(){
   // takes in the traj_count and throws next trajectory point to robot
   
-  if (traj_count == 146){
+  if (traj_count == 101){ //146 total
   
     writeToFile();
   
@@ -588,17 +588,17 @@ int main(int argc, char **argv){
   ros::Subscriber sub = \
      m.subscribe("/tag_detections_pose", 100, poseCallback);
   ros::Subscriber subjoint = \
-     m.subscribe("/rosey/joint_states", 100, jointCallback);
+     m.subscribe("/rosey/joint_states", 100, jointCallback); //gary
   ros::Subscriber substatus = \
      m.subscribe("/rosey/joint_trajectory_action/result", 100, \
-      statusCallback);
+      statusCallback); //gary
   ros::Subscriber subAT = \
      m.subscribe("AprilTagPointsRaw", 100, \
       ATCallback);
   ros::Subscriber subimage = m.subscribe("/usb_cam/image_raw", 50, &imageCallback);
   pub = m.advertise \
      <control_msgs::FollowJointTrajectoryActionGoal> \
-     ("/rosey/joint_trajectory_action/goal", 10);
+     ("/rosey/joint_trajectory_action/goal", 10); //gary
         
   // generate trajectory
   gen_calib_traj();
