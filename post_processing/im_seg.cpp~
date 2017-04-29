@@ -43,6 +43,8 @@ Mat Threshold( Mat& src, char* window_name )
   Rect myROI(0, 0, 1080-80, 1000);
   src = src(myROI);
   
+                //imshow( window_name, src );
+  
   return src;
 }
 
